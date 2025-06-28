@@ -1,2 +1,2 @@
 
-web: cd src/api && python3 server.py
+web: cd src/api && python server.py
