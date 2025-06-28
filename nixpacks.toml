@@ -1,6 +1,6 @@
 
 [phases.setup]
-nixPkgs = ["python39", "python39Packages.pip"]
+nixPkgs = ["python3", "python3Packages.pip"]
 
 [phases.install]
 cmds = ["pip install -r requirements.txt"]
@@ -9,4 +9,4 @@ cmds = ["pip install -r requirements.txt"]
 cmds = ["echo 'Python backend ready'"]
 
 [start]
-cmd = "cd src/api && python server.py"
+cmd = "cd src/api && python3 server.py"
