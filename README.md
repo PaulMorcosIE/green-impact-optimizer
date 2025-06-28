@@ -15,6 +15,208 @@ A comprehensive end-to-end system for selecting optimal ESG (Environmental, Soci
 
 ---
 
+## 🧪 How to Run This Project - Complete Step-by-Step Guide
+
+### Prerequisites (What You Need Installed)
+
+Before you can run this project, you need to have these programs installed on your computer:
+
+#### 1. Install Node.js and npm
+- **Windows/Mac**: Go to [nodejs.org](https://nodejs.org/) and download the LTS version
+- **Linux**: Run `sudo apt update && sudo apt install nodejs npm`
+- **Verify installation**: Open terminal/command prompt and type:
+  ```bash
+  node --version
+  npm --version
+  ```
+  You should see version numbers like `v18.17.0` and `9.6.7`
+
+#### 2. Install Python (3.8 or higher)
+- **Windows**: Download from [python.org](https://python.org/downloads/) - **IMPORTANT**: Check "Add Python to PATH" during installation
+- **Mac**: Install via Homebrew: `brew install python3` or download from python.org
+- **Linux**: Run `sudo apt update && sudo apt install python3 python3-pip python3-venv`
+- **Verify installation**: Open terminal/command prompt and type:
+  ```bash
+  python --version
+  # or try python3 --version if the above doesn't work
+  pip --version
+  # or try pip3 --version if the above doesn't work
+  ```
+
+#### 3. Install Git (Optional but Recommended)
+- Download from [git-scm.com](https://git-scm.com/downloads)
+- Follow the installation wizard with default settings
+
+### Step 1: Download the Project
+
+Choose one of these methods:
+
+#### Method A: Using Git (Recommended)
+```bash
+# Open terminal/command prompt and run:
+git clone <your-repo-url>
+cd esg-optimization-app
+```
+
+#### Method B: Download ZIP
+1. Click the green "Code" button on GitHub
+2. Click "Download ZIP"
+3. Extract the ZIP file to a folder
+4. Open terminal/command prompt and navigate to that folder:
+   ```bash
+   cd path/to/esg-optimization-app
+   ```
+
+### Step 2: Set Up the Frontend (React App)
+
+1. **Open Terminal/Command Prompt** in the project folder
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+   This will take 2-5 minutes and download all required packages.
+
+3. **Start the Frontend Development Server**:
+   ```bash
+   npm run dev
+   ```
+   You should see output like:
+   ```
+   Local:   http://localhost:5173/
+   Network: http://192.168.1.100:5173/
+   ```
+
+4. **Keep this terminal window open** - the frontend server needs to keep running
+
+### Step 3: Set Up the Backend (Python API)
+
+1. **Open a NEW terminal/command prompt window** (keep the first one running)
+2. **Navigate to the API folder**:
+   ```bash
+   cd src/api
+   ```
+
+3. **Create a Python Virtual Environment** (this keeps packages isolated):
+   ```bash
+   # On Windows:
+   python -m venv venv
+   
+   # On Mac/Linux:
+   python3 -m venv venv
+   ```
+
+4. **Activate the Virtual Environment**:
+   ```bash
+   # On Windows:
+   venv\Scripts\activate
+   
+   # On Mac/Linux:
+   source venv/bin/activate
+   ```
+   You should see `(venv)` appear at the beginning of your terminal prompt.
+
+5. **Install Python Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   This will take 5-10 minutes as it downloads machine learning libraries.
+
+6. **Start the Python API Server**:
+   ```bash
+   python server.py
+   ```
+   You should see output like:
+   ```
+   🚀 Initializing ESG Pipeline...
+   ✅ ESG Pipeline ready!
+   🌐 Starting Flask API server...
+   📊 Dataset loaded with 100,000 ESG projects
+   🔗 API endpoints available:
+      - GET  /api/health
+      - POST /api/optimize
+      - GET  /api/dataset/stats
+      - POST /api/search
+   * Running on http://0.0.0.0:5000
+   ```
+
+7. **Keep this terminal window open** - the backend server needs to keep running
+
+### Step 4: Access the Application
+
+1. **Open your web browser** (Chrome, Firefox, Safari, Edge)
+2. **Go to**: `http://localhost:5173`
+3. You should see the ESG Optimization Dashboard!
+
+### Step 5: Test the Application
+
+1. **Enter a query** like: "Find renewable energy projects in Africa under $5M with high impact"
+2. **Set a budget** (default is $10,000,000)
+3. **Click "Find Optimal Projects"**
+4. **Wait 10-30 seconds** for the AI to process your request
+5. **View results** in the different tabs (Summary, Projects, Filters, Explanation)
+
+### Troubleshooting Common Issues
+
+#### Problem: "npm command not found"
+- **Solution**: Node.js wasn't installed correctly. Reinstall Node.js and make sure to restart your terminal.
+
+#### Problem: "python command not found" 
+- **Solution**: Try `python3` instead of `python`. On Windows, make sure Python was added to PATH during installation.
+
+#### Problem: "pip install fails with permission errors"
+- **Solution**: Make sure you activated the virtual environment (`venv\Scripts\activate` on Windows or `source venv/bin/activate` on Mac/Linux)
+
+#### Problem: Frontend shows "Connection Error"
+- **Solution**: Make sure the Python API server is running on port 5000. Check that you see the "✅ ESG Pipeline ready!" message.
+
+#### Problem: "Port 5173 already in use"
+- **Solution**: Kill other processes using that port or use a different port:
+  ```bash
+  npm run dev -- --port 3000
+  ```
+
+#### Problem: Python packages fail to install
+- **Solution**: Update pip first:
+  ```bash
+  pip install --upgrade pip
+  ```
+  Then try installing requirements again.
+
+### Stopping the Application
+
+1. **Stop the Frontend**: Press `Ctrl+C` in the terminal running `npm run dev`
+2. **Stop the Backend**: Press `Ctrl+C` in the terminal running `python server.py`
+3. **Deactivate Python Environment**: Type `deactivate` in the Python terminal
+
+### Development Workflow
+
+When developing:
+1. **Keep both servers running** during development
+2. **Frontend changes** are automatically reflected in the browser
+3. **Backend changes** require restarting the Python server (Ctrl+C then `python server.py` again)
+4. **Always activate the virtual environment** before working with Python:
+   ```bash
+   cd src/api
+   # Windows: venv\Scripts\activate
+   # Mac/Linux: source venv/bin/activate
+   python server.py
+   ```
+
+### Available Scripts
+
+```bash
+# Frontend (run from project root)
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run lint         # Run ESLint
+
+# Backend (run from src/api with venv activated)
+python server.py     # Start API server
+```
+
+---
+
 ## 📂 Project Structure
 
 ```
@@ -29,6 +231,9 @@ esg-optimization-app/
 │   │   ├── project_scorer.py         # Weighted ESG scoring algorithms
 │   │   ├── optimizer.py              # Linear optimization using scipy
 │   │   └── demo.py                   # Demonstration script with sample queries
+│   ├── api/                          # Flask API server
+│   │   ├── server.py                 # Main API endpoints
+│   │   └── requirements.txt          # Python dependencies
 │   ├── components/
 │   │   ├── esg/                      # ESG-specific UI components
 │   │   │   ├── FilterPanel.tsx       # Dynamic filter interface
@@ -156,45 +361,6 @@ The complete ESG optimization pipeline follows these steps:
 ### 5. **Results & Explanation**
 - Generate comprehensive portfolio summary with real metrics
 - AI-powered explanation: *"Selected 12 projects totaling $9.2M investment, creating 2,847 jobs and reducing 15,200 tonnes CO2 annually. Portfolio focuses on renewable energy in Africa with average ESG score of 78.3."*
-
----
-
-## 🧪 How to Run Locally
-
-### Prerequisites
-- Node.js 18+ and npm
-- Modern web browser with JavaScript enabled
-
-### Setup Instructions
-
-1. **Clone the Repository**
-```bash
-git clone <your-repo-url>
-cd esg-optimization-app
-```
-
-2. **Install Dependencies**
-```bash
-npm install
-```
-
-3. **Start Development Server**
-```bash
-npm run dev
-```
-
-4. **Access the Application**
-- Open your browser to `http://localhost:5173`
-- The ESG dashboard will be available at the root URL
-
-### Available Scripts
-
-```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run preview      # Preview production build
-npm run lint         # Run ESLint
-```
 
 ---
 
