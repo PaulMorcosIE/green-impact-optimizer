@@ -1,15 +1,14 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertCircle, CheckCircle, Loader2, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { getApiUrl } from '@/lib/config';
 import ProjectResults from '@/components/esg/ProjectResults';
 import FilterPanel from '@/components/esg/FilterPanel';
 import WeightingPanel from '@/components/esg/WeightingPanel';
@@ -60,8 +59,8 @@ const ESGDashboard = () => {
 
     setIsLoading(true);
     try {
-      // Call the real Flask API
-      const response = await fetch('http://localhost:5000/api/optimize', {
+      // Use the new API configuration
+      const response = await fetch(getApiUrl('/api/optimize'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -96,14 +95,13 @@ const ESGDashboard = () => {
       console.error('API Error:', error);
       toast({
         title: "Connection Error",
-        description: "Failed to connect to ESG optimization server. Make sure the Python API is running on port 5000.",
+        description: "Failed to connect to ESG optimization server.",
         variant: "destructive"
       });
       
-      // Fallback to show connection instructions
       setResults({
         success: false,
-        error: "Connection failed. Please start the Python API server by running: python src/api/server.py",
+        error: "Connection failed. Please check if the backend server is running.",
         user_query: userQuery,
         budget: budget,
         selected_count: 0,
