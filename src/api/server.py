@@ -1,4 +1,3 @@
-
 """
 Flask API Server for ESG Optimization Pipeline
 Exposes the ESG pipeline as REST endpoints for the React frontend
@@ -108,7 +107,7 @@ def search_projects():
 
 if __name__ == '__main__':
     print("🌐 Starting Flask API server...")
-    print("📊 Dataset loaded with 100,000 ESG projects")
+    print("📊 Dataset loaded with 500,000 ESG projects")
     print("🔗 API endpoints available:")
     print("   - GET  /api/health")
     print("   - POST /api/optimize")

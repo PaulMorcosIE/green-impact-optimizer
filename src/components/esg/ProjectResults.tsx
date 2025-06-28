@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, DollarSign, Leaf, Users, TrendingUp } from 'lucide-react';
+import { MapPin, DollarSign, Leaf, Users, TrendingUp, Star } from 'lucide-react';
 
 interface Project {
   Project_Name: string;
@@ -13,6 +13,7 @@ interface Project {
   Region: string;
   Sector: string;
   Expected_ROI_Percent?: number;
+  Credit_Rating?: string;
   Beneficiaries_Direct?: number;
 }
 
@@ -21,6 +22,13 @@ interface ProjectResultsProps {
 }
 
 const ProjectResults = ({ projects }: ProjectResultsProps) => {
+  const getCreditRatingColor = (rating: string) => {
+    if (rating.startsWith('AAA') || rating.startsWith('AA')) return 'bg-green-100 text-green-800';
+    if (rating.startsWith('A')) return 'bg-blue-100 text-blue-800';
+    if (rating.startsWith('BBB')) return 'bg-yellow-100 text-yellow-800';
+    return 'bg-gray-100 text-gray-800';
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -47,7 +55,7 @@ const ProjectResults = ({ projects }: ProjectResultsProps) => {
             </CardHeader>
             
             <CardContent className="pt-0">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div className="flex items-center gap-2">
                   <DollarSign className="w-4 h-4 text-green-600" />
                   <div>
@@ -78,6 +86,18 @@ const ProjectResults = ({ projects }: ProjectResultsProps) => {
                     <div>
                       <p className="text-sm font-medium">{project.Expected_ROI_Percent}%</p>
                       <p className="text-xs text-gray-500">Expected ROI</p>
+                    </div>
+                  </div>
+                )}
+                
+                {project.Credit_Rating && (
+                  <div className="flex items-center gap-2">
+                    <Star className="w-4 h-4 text-orange-600" />
+                    <div>
+                      <Badge className={getCreditRatingColor(project.Credit_Rating)}>
+                        {project.Credit_Rating}
+                      </Badge>
+                      <p className="text-xs text-gray-500 mt-1">Credit Rating</p>
                     </div>
                   </div>
                 )}

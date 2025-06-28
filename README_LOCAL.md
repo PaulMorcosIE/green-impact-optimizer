@@ -54,11 +54,11 @@ The backend will be available at http://localhost:5000
 You should see output like:
 ```
 🚀 Initializing ESG Pipeline...
-✅ Lightweight LLM handler initialized (rule-based parsing)
-✅ Rule-based parsing ready (no model loading required)
+✅ Enhanced LLM handler initialized (comprehensive rule-based parsing)
+✅ Enhanced rule-based parsing ready (no model loading required)
 ✅ ESG Pipeline ready!
 🌐 Starting Flask API server...
-📊 Dataset loaded with 100,000 ESG projects
+📊 Dataset loaded with 500,000 ESG projects
 ```
 
 ### 4. Start the Frontend (in a new terminal)
@@ -96,10 +96,11 @@ The frontend will be available at http://localhost:5173
   ```
 
 ## Features
-- 100,000 synthetic ESG projects
-- Natural language query parsing (rule-based, no heavy ML models)
-- Project filtering and optimization
-- Real-time results with impact metrics
+- 500,000 synthetic ESG projects with comprehensive project types
+- Enhanced natural language query parsing with hierarchical project matching
+- Credit rating integration for financial assessment
+- Project filtering and optimization with 82 detailed metrics
+- Real-time results with comprehensive impact metrics
 
 ## API Endpoints
 - GET /api/health - Health check
@@ -107,12 +108,15 @@ The frontend will be available at http://localhost:5173
 - GET /api/dataset/stats - Dataset statistics
 - POST /api/search - Search projects
 
-## Example Queries
+## Enhanced Query Examples
 - "Find low-risk renewable energy projects in Africa under $10M"
-- "Solar projects with ROI above 15% and high impact"
-- "Water management projects creating 100+ jobs"
+- "Solar photovoltaic projects with ROI above 15% and high impact"
+- "Wind offshore projects creating 100+ jobs with investment grade rating"
+- "Water treatment facilities with moderate risk and AAA credit rating"
+- "Electric vehicle infrastructure projects in North America"
+- "Green hydrogen projects with innovation scores above 80"
 
 ## Performance Notes
-- Dataset generation: ~10-15 seconds on first run
-- Query processing: ~2-5 seconds
-- Memory usage: ~200-300MB for dataset
+- Dataset generation: ~30-45 seconds on first run (500K projects)
+- Query processing: ~3-8 seconds depending on complexity
+- Memory usage: ~800MB-1.2GB for full dataset
