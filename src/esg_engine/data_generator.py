@@ -235,4 +235,26 @@ def generate_synthetic_esg_data(n_rows: int = 500000) -> pd.DataFrame:
     
     return df_esg
 
-# ... keep existing code (get_column_info function remains the same)
+def get_column_info(df: pd.DataFrame) -> dict:
+    """
+    Get comprehensive information about DataFrame columns
+    
+    Args:
+        df: DataFrame to analyze
+        
+    Returns:
+        Dictionary with column type information
+    """
+    numerical_columns = df.select_dtypes(include=[np.number]).columns.tolist()
+    categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
+    boolean_columns = df.select_dtypes(include=['bool']).columns.tolist()
+    datetime_columns = df.select_dtypes(include=['datetime64']).columns.tolist()
+    
+    return {
+        'total_columns': len(df.columns),
+        'numerical_columns': numerical_columns,
+        'categorical_columns': categorical_columns,
+        'boolean_columns': boolean_columns,
+        'datetime_columns': datetime_columns,
+        'all_columns': df.columns.tolist()
+    }
