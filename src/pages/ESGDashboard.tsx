@@ -60,93 +60,71 @@ const ESGDashboard = () => {
 
     setIsLoading(true);
     try {
-      // Simulate API call to Python backend
-      // In production, this would call your Flask/FastAPI endpoint
-      const response = await simulateESGOptimization({
-        user_text: userQuery,
-        budget: budget,
-        weights_dict: useCustomWeights ? customWeights : null
+      // Call the real Flask API
+      const response = await fetch('http://localhost:5000/api/optimize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_text: userQuery,
+          budget: budget,
+          weights_dict: useCustomWeights ? convertWeightsToDecimal(customWeights) : null
+        })
       });
 
-      setResults(response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setResults(data);
       
-      if (response.success) {
+      if (data.success) {
         toast({
           title: "Optimization Complete",
-          description: `Found ${response.selected_count} optimal projects`,
+          description: `Found ${data.selected_count} optimal projects`,
         });
       } else {
         toast({
           title: "Optimization Failed",
-          description: response.error || "Unknown error occurred",
+          description: data.error || "Unknown error occurred",
           variant: "destructive"
         });
       }
     } catch (error) {
+      console.error('API Error:', error);
       toast({
-        title: "Error",
-        description: "Failed to connect to optimization engine",
+        title: "Connection Error",
+        description: "Failed to connect to ESG optimization server. Make sure the Python API is running on port 5000.",
         variant: "destructive"
+      });
+      
+      // Fallback to show connection instructions
+      setResults({
+        success: false,
+        error: "Connection failed. Please start the Python API server by running: python src/api/server.py",
+        user_query: userQuery,
+        budget: budget,
+        selected_count: 0,
+        selected_projects: [],
+        project_summary: null,
+        explanation: "",
+        optimization_summary: null,
+        parsed_filters: {}
       });
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Simulate the ESG optimization process
-  const simulateESGOptimization = async (params: any): Promise<ESGResults> => {
-    // This would normally call your Python backend
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    return {
-      success: true,
-      user_query: params.user_text,
-      budget: params.budget,
-      selected_count: 12,
-      selected_projects: [
-        {
-          Project_Name: "Solar Farm Development - Ghana",
-          Total_Investment_USD: 2500000,
-          Overall_ESG_Score: 92.5,
-          CO2_Reduction_Tonnes_Annual: 15000,
-          Jobs_Created_Total: 150,
-          Region: "Africa",
-          Sector: "Energy"
-        },
-        {
-          Project_Name: "Water Purification System - Kenya",
-          Total_Investment_USD: 1800000,
-          Overall_ESG_Score: 89.2,
-          CO2_Reduction_Tonnes_Annual: 5000,
-          Jobs_Created_Total: 80,
-          Region: "Africa",
-          Sector: "Water"
-        }
-      ],
-      project_summary: {
-        total_projects: 12,
-        total_investment: 8950000,
-        average_esg_score: 87.3,
-        total_co2_reduction: 45000,
-        total_jobs_created: 680,
-        total_beneficiaries: 125000,
-        average_roi: 12.8,
-        sectors_represented: 4,
-        regions_represented: 2
-      },
-      explanation: "Selected 12 high-impact renewable energy and water projects across Africa. These projects offer strong ESG scores while maintaining low financial risk. The portfolio emphasizes CO2 reduction and job creation in underserved communities.",
-      optimization_summary: {
-        total_cost: 8950000,
-        total_score: 1047.6,
-        budget_utilization: 0.895,
-        num_projects: 12
-      },
-      parsed_filters: {
-        Region: "Africa",
-        Total_Investment_USD: "<=10000000",
-        Financial_Risk_Level: "Low"
-      }
-    };
+  // Convert percentage weights to decimal for API
+  const convertWeightsToDecimal = (weights: Record<string, number>) => {
+    const converted: Record<string, number> = {};
+    for (const [key, value] of Object.entries(weights)) {
+      converted[key] = value / 100;
+    }
+    return converted;
   };
 
   return (
@@ -157,6 +135,9 @@ const ESGDashboard = () => {
           <h1 className="text-4xl font-bold text-gray-900">ESG Project Optimizer</h1>
           <p className="text-lg text-gray-600">
             Find and optimize ESG projects using AI-powered natural language processing
+          </p>
+          <p className="text-sm text-gray-500">
+            Powered by 100,000 synthetic ESG projects with 80+ sustainability metrics
           </p>
         </div>
 
@@ -246,19 +227,39 @@ const ESGDashboard = () => {
             </TabsList>
 
             <TabsContent value="summary" className="space-y-4">
-              <OptimizationSummary 
-                summary={results.project_summary}
-                optimization={results.optimization_summary}
-                budget={results.budget}
-              />
+              {results.success && results.project_summary ? (
+                <OptimizationSummary 
+                  summary={results.project_summary}
+                  optimization={results.optimization_summary}
+                  budget={results.budget}
+                />
+              ) : (
+                <Card className="border-red-200">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center gap-2 text-red-600">
+                      <AlertCircle className="w-5 h-5" />
+                      <span className="font-medium">No Results Available</span>
+                    </div>
+                    <p className="text-red-700 mt-2">{results.error}</p>
+                  </CardContent>
+                </Card>
+              )}
             </TabsContent>
 
             <TabsContent value="projects">
-              <ProjectResults projects={results.selected_projects} />
+              {results.success && results.selected_projects?.length > 0 ? (
+                <ProjectResults projects={results.selected_projects} />
+              ) : (
+                <Card>
+                  <CardContent className="pt-6">
+                    <p className="text-gray-500">No projects selected</p>
+                  </CardContent>
+                </Card>
+              )}
             </TabsContent>
 
             <TabsContent value="filters">
-              <FilterPanel filters={results.parsed_filters} />
+              <FilterPanel filters={results.parsed_filters || {}} />
             </TabsContent>
 
             <TabsContent value="explanation">
@@ -270,23 +271,13 @@ const ESGDashboard = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 leading-relaxed">{results.explanation}</p>
+                  <p className="text-gray-700 leading-relaxed">
+                    {results.explanation || "No explanation available"}
+                  </p>
                 </CardContent>
               </Card>
             </TabsContent>
           </Tabs>
-        )}
-
-        {results && !results.success && (
-          <Card className="border-red-200">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-2 text-red-600">
-                <AlertCircle className="w-5 h-5" />
-                <span className="font-medium">Optimization Failed</span>
-              </div>
-              <p className="text-red-700 mt-2">{results.error}</p>
-            </CardContent>
-          </Card>
         )}
       </div>
     </div>
